@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <!-- 引入 layui.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/layui/2.4.5/css/layui.min.css" />
+    <!-- 引入 layui.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/layui/2.4.5/layui.js"></script>
+    <style>
+      .layui-layer-popLeft,
+      .layui-layer-popRight {
+        top: 0;
+        bottom: 0;
+        box-shadow: 1px 1px 10px rgba(0, 0, 0, .1);
+        border-radius: 0;
+        overflow: auto;
+      }
+
+      /* 动画 */
+
+      /* 从右往左滑入 */
+      @-webkit-keyframes layui-rl {
+        from {
+          -webkit-transform: translate3d(100%, 0, 0);
+        }
+
+        to {
+          -webkit-transform: translate3d(0, 0, 0);
+        }
+      }
+
+      @keyframes layui-rl {
+        from {
+          transform: translate3d(100%, 0, 0);
+        }
+
+        to {
+          transform: translate3d(0, 0, 0);
+        }
+      }
+
+      .layui-anim-rl {
+        -webkit-animation-name: layui-rl;
+        animation-name: layui-rl;
+      }
+
+      /* 从右往左划 关闭 */
+      @-webkit-keyframes layui-rlclose {
+        from {
+          -webkit-transform: translate3d(0, 0, 0);
+          opacity: 1;
+        }
+
+        to {
+          -webkit-transform: translate3d(100%, 0, 0);
+          opacity: 1;
+        }
+      }
+
+      @keyframes layui-rlclose {
+        from {
+          transform: translate3d(0, 0, 0);
+        }
+
+        to {
+          transform: translate3d(100%, 0, 0);
+        }
+      }
+
+      .layui-rlclose {
+        -webkit-animation-name: layui-rlclose;
+        animation-name: layui-rlclose;
+      }
+
+      .layui-anim-rl.layer-anim-close {
+        -webkit-animation-name: layui-rlclose;
+        animation-name: layui-rlclose;
+      }
+
+      /* 从左往右划入 */
+      @-webkit-keyframes layui-lr {
+        from {
+          -webkit-transform: translate3d(-100%, 0, 0);
+          opacity: 1;
+        }
+
+        to {
+          -webkit-transform: translate3d(0, 0, 0);
+          opacity: 1;
+        }
+      }
+
+      @keyframes layui-lr {
+        from {
+          transform: translate3d(-100%, 0, 0);
+        }
+
+        to {
+          transform: translate3d(0, 0, 0);
+        }
+      }
+
+      .layui-anim-lr {
+        -webkit-animation-name: layui-lr;
+        animation-name: layui-lr;
+      }
+
+      /* 从左往右划 关闭 */
+      @-webkit-keyframes layui-lrclose {
+        from {
+          -webkit-transform: translate3d(0, 0, 0);
+          opacity: 1;
+        }
+
+        to {
+          -webkit-transform: translate3d(-100%, 0, 0);
+          opacity: 1;
+        }
+      }
+
+      @keyframes layui-lrclose {
+        from {
+          transform: translate3d(0, 0, 0);
+        }
+
+        to {
+          transform: translate3d(-100%, 0, 0);
+        }
+      }
+
+      .layui-lrclose {
+        -webkit-animation-name: layui-lrclose;
+        animation-name: layui-lrclose;
+      }
+
+      .layui-anim-lr.layer-anim-close {
+        -webkit-animation-name: layui-lrclose;
+        animation-name: layui-lrclose;
+      }
+    </style>
+    <title></title>
+  </head>
+  <body>
+    <button type="button" class="layui-btn" id="pop_left">左弹出</button>
+    <button type="button" class="layui-btn" id="pop_right">右弹出</button>
+    <script>
+      layui.use(['layer', 'element'], function() {
+        var layer = layui.layer,
+          $ = layui.jquery,
+          element = layui.element;
+        // 侧滑弹出
+        function popup(options) {
+          var success = options.success,
+            skin = options.skin;
+
+          delete options.success;
+          delete options.skin;
+
+          return layer.open($.extend({
+            type: 1,
+            title: '提示',
+            content: '',
+            id: 'LAY-system-view-popup',
+            skin: 'layui-layer-admin' + (skin ? ' ' + skin : ''),
+            shadeClose: true,
+            closeBtn: false,
+            success: function(layero, index) {
+              var elemClose = $('<i class="layui-icon" close>&#x1006;</i>');
+              layero.append(elemClose);
+              elemClose.on('click', function() {
+                layer.close(index);
+              });
+              typeof success === 'function' && success.apply(this, arguments);
+            }
+          }, options));
+        };
+        // 左
+        function popupLeft(options) {
+          return layer.open($.extend({
+            type: 1,
+            id: 'mhrPopupL',
+            anim: -1,
+            title: false,
+            closeBtn: false,
+            offset: 'l',
+            shade: 0.1,
+            shadeClose: true,
+            skin: 'layui-anim layui-anim-lr layui-layer-popLeft',
+            area: '300px'
+          }, options));
+        }
+        // 右
+        function popupRight(options) {
+          return layer.open($.extend({
+            type: 1,
+            id: 'mhrPopupR',
+            anim: -1,
+            title: false,
+            closeBtn: false,
+            offset: 'r',
+            shade: 0.1,
+            shadeClose: true,
+            skin: 'layui-anim layui-anim-rl layui-layer-popRight',
+            area: '300px'
+          }, options));
+        }
+
+
+        $('#pop_left').on('click', function() {
+          popupLeft({
+            id: 'abcdegh',
+            type: 2,
+            area: ['70%', '100vh'],
+            content: 'https://map.baidu.com/'
+          });
+        });
+
+        $('#pop_right').on('click', function() {
+          popupRight({
+            id: 'abcde',
+            type: 2,
+            area: ['70%', '100vh'],
+            content: 'https://ditu.amap.com/'
+          });
+        });
+
+      });
+    </script>
+  </body>
+</html>
